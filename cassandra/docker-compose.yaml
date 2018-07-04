@@ -19,9 +19,11 @@ services:
     image: cassandra:3.11
     command: /bin/bash -c "echo 'Waiting for seed node' && sleep 30 && /docker-entrypoint.sh cassandra -f"
     environment:
-      - "CASSANDRA_SEEDS=cassandra-seed-node"
+      - "CASSANDRA_SEEDS=cassandra-seed"
     depends_on:
       - "cassandra-seed"
+    links:
+      - cassandra-seed      
     volumes:
       - local_cassandra_data_01:/var/lib/cassandra
 
@@ -32,9 +34,11 @@ services:
     image: cassandra:3.11
     command: /bin/bash -c "echo 'Waiting for seed node' && sleep 80 && /docker-entrypoint.sh cassandra -f"
     environment:
-      - "CASSANDRA_SEEDS=cassandra-seed-node"
+      - "CASSANDRA_SEEDS=cassandra-seed"
     depends_on:
       - "cassandra-seed"
+    links:
+      - cassandra-seed
     volumes:
       - local_cassandra_data_02:/var/lib/cassandra
 
