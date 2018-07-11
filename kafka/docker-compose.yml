@@ -6,27 +6,45 @@ services:
     ports:
       - "2181:2181"
 
-  # @see: https://github.com/StreamingMicroservicesPlatform/docker-kafka    
   kafka-broker:
-    image: solsson/kafka
+    image: wurstmeister/kafka:latest
     ports:
-      - '9092:9092'
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: "kafka-broker"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_PORT: 9092
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-broker:9092"
+      KAFKA_LISTENERS: "PLAINTEXT://:9092"
+      KAFKA_CREATE_TOPICS: "test:1:1"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_DIRS: /kafka/logs      
     volumes:
-      - kafka_solsson:/tmp/kafka-logs
-    entrypoint: ./bin/kafka-server-start.sh
-    command:
-      - config/server.properties
-      - --override
-      -   zookeeper.connect=zookeeper:2181
-      #- --override 
-      #    log.dirs=/var/lib/kafka/data/topics
-      #- --override 
-      #    log.retention.hours=-1
-      - --override
-      -   broker.id=0
-      # unlike Kubernetes StatefulSet, compose gives containers a random hostname (leading to redirects to a hex name)
-      - --override
-      -   advertised.listener=PLAINTEXT://kafka-0:9092       
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka_data_logs:/kafka/logs
+
+#  # @see: https://github.com/StreamingMicroservicesPlatform/docker-kafka    
+#  kafka-broker:
+#    image: solsson/kafka
+#    ports:
+#      - '9092:9092'
+#    volumes:
+#      - kafka_solsson:/tmp/kafka-logs
+#    entrypoint: ./bin/kafka-server-start.sh
+#    command:
+#      - config/server.properties
+#      - --override
+#      -   zookeeper.connect=zookeeper:2181
+#      #- --override 
+#      #    log.dirs=/var/lib/kafka/data/topics
+#      #- --override 
+#      #    log.retention.hours=-1
+#      - --override
+#      -   broker.id=0
+#      # unlike Kubernetes StatefulSet, compose gives containers a random hostname (leading to redirects to a hex name)
+#      - --override
+#      -   advertised.listener=PLAINTEXT://kafka-0:9092       
 
 
 
@@ -61,6 +79,6 @@ services:
       #KM_CONFIGFILE: /var/lib/kafka-manager/kafka-manager.conf
 
 volumes:
-  kafka_solsson:
+  kafka_data_logs:
   
 
