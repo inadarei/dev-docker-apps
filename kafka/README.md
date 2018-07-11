@@ -1,3 +1,7 @@
+## Credits
+
+Fork of: https://github.com/wurstmeister/kafka-docker 
+
 ## Installation and Usage
 
 1. Install [Docker for Mac](https://www.docker.com/docker-mac) or [Docker for Windows](https://www.docker.com/docker-windows)
