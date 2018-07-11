@@ -8,19 +8,19 @@ Fork of: https://github.com/wurstmeister/kafka-docker
 
 2. Run Kafka and Kafka Admin
    ```bash
-   docker-compose up -d
+   make
    ```
 
 3. Check health of the cluster: 
 
    ```bash
-   docker-compose ps
+   make ps
    ```
 
 4. Shut down the cluster:
 
    ```
-   docker-compose down
+   make stop
    ```
 
 5. Rinse, repeat
@@ -28,6 +28,11 @@ Fork of: https://github.com/wurstmeister/kafka-docker
    
 
 ### One more thing. 
+
+1. Send several messages to `sometopic` using Kafka console: 
+   ```
+   make send-message topic=sometopic
+   ```
 
 1. Kafka Admin GUI is available in browser at: http://0.0.0.0:49092/
 2. Kafdrop GUI is available at http://0.0.0.0:9010/ and allows seeing messages
