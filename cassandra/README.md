@@ -4,19 +4,19 @@
 
 2. Run a Cassandra cluster: 
    ```bash
-   docker-compose up -d
+   make
    ```
 
 3. Check health of the cluster: 
 
    ```bash
-   docker-compose ps
+   make ps
    ```
 
 4. Shut down the cluster:
 
    ```
-   docker-compose down
+   make stop
    ```
 
 5. Rinse, repeat
@@ -28,5 +28,5 @@
 If you need CQLSH access to the cluster, just run the following from bash: 
 
 ```bash
-./cqlsh.sh
+make cqlsh
 ```
