@@ -1,6 +1,6 @@
 default: start
 
-service:=cassandra
+service:=cassandra-seed
 
 .PHONY: start
 start: 
