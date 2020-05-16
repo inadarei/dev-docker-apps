@@ -1,0 +1,56 @@
+version: '3'
+
+# Based on: https://github.com/calvinlfer/compose-cassandra-cluster/blob/master/docker-compose.yml
+# Note: exit code 137 indicates out of memory and you need to increase RAM for Docker
+services:
+  cassandra-seed:
+    container_name: cassandra-seed
+    image: cassandra:3.11
+    ports:
+      - "9042:9042"   # Native protocol clients
+      # - "7199:7199"   # JMX
+      # - "9160:9160"   # Thrift clients
+      # - "7000:7000"   # cluster communication
+      # - "7001:7001"   # cluster communication (SSL)      
+    volumes:
+      - local_cassandra_data_00:/var/lib/cassandra
+
+  cassandra-node-1:
+    image: cassandra:3.11
+    command: /bin/bash -c "echo 'Waiting for seed node' && sleep 30 && /docker-entrypoint.sh cassandra -f"
+    environment:
+      - "CASSANDRA_SEEDS=cassandra-seed"
+    depends_on:
+      - "cassandra-seed"
+    links:
+      - cassandra-seed      
+    volumes:
+      - local_cassandra_data_01:/var/lib/cassandra
+
+
+  # you cannot have multiple nodes join the cluster at the same time when
+  # cassandra.consistent.rangemovement is true so we further delay it to give it time to stabilize
+  cassandra-node-2:
+    image: cassandra:3.11
+    command: /bin/bash -c "echo 'Waiting for seed node' && sleep 80 && /docker-entrypoint.sh cassandra -f"
+    environment:
+      - "CASSANDRA_SEEDS=cassandra-seed"
+    depends_on:
+      - "cassandra-seed"
+    links:
+      - cassandra-seed
+    volumes:
+      - local_cassandra_data_02:/var/lib/cassandra
+
+  # # if you need to init some schema on startup:    
+  #cqlsh:
+  #  image: cassandra:3.11
+  #  entrypoint: cqlsh cassandra
+    #volumes:
+    #  - ./schema.cql:/schema.cql
+
+
+volumes:
+  local_cassandra_data_00:
+  local_cassandra_data_01:
+  local_cassandra_data_02:
